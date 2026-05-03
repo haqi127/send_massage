@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Bot Sender</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding: 50px; background: #f4f4f9; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        textarea { width: 100%; height: 100px; margin: 10px 0; padding: 10px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #0088cc; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #006699; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h3>Kirim Pesan ke Grup</h3>
+    <textarea id="message" placeholder="Tulis pesan di sini..."></textarea>
+    <button onclick="sendMessage()">Kirim Pesan</button>
+    <p id="status"></p>
+</div>
+
+<script>
+    async function sendMessage() {
+        const token = 'YOUR_BOT_TOKEN_DISINI'; // Ganti dengan Token Bot
+        const chatId = 'YOUR_CHAT_ID_DISINI';   // Ganti dengan Chat ID Grup
+        const message = document.getElementById('message').value;
+        const status = document.getElementById('status');
+
+        if(!message) return alert("Pesan tidak boleh kosong!");
+
+        const url = `https://api.telegram.org/bot${token}/sendMessage`;
+        
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message
+                })
+            });
+
+            if (response.ok) {
+                status.innerText = "✅ Pesan berhasil dikirim!";
+                document.getElementById('message').value = "";
+            } else {
+                status.innerText = "❌ Gagal mengirim pesan.";
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            status.innerText = "⚠️ Terjadi kesalahan koneksi.";
+        }
+    }
+</script>
+
+</body>
+</html>
+
